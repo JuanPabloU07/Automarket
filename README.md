@@ -9,7 +9,7 @@ ID: 1152443924
 
 # 1. Overview
 
-**AutoMarketPro** is a backend system designed to manage a vehicle dealership.
+**AutoMarket** is a backend system designed to manage a vehicle dealership.
 The system allows the company to:
 
 * Register vehicles in inventory
