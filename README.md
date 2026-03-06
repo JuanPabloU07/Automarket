@@ -1,4 +1,4 @@
-# AutoMarketPro — Hybrid Backend Architecture (MySQL + MongoDB + Node/Express)
+# AutoMarket — Hybrid Backend Architecture (MySQL + MongoDB + Node/Express)
 
 Juan Pablo Urrego
 Clan: Thompson
