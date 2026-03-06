@@ -1,62 +1,96 @@
-# AutoMarket — Car Buy & Sell
+# AutoMarketPro — Hybrid Backend Architecture (MySQL + MongoDB + Node/Express)
 
-A web application to manage a dealership's inventory. You can register vehicles, import them from a CSV file, and view the history of every action performed within the system.
+Juan Pablo Urrego
+Clan: Thompson
+[juanpablou07@gmail.com]()
+ID: 1152443924
 
-## 📋 Prerequisites
+---
 
-What do you need to install?
+# 1. Overview
 
-* **Node.js** — to run the server.
-* **MySQL** — to store vehicle data.
-* **MongoDB** — for the activity history (optional).
+**AutoMarketPro** is a backend system designed to manage a vehicle dealership.
+The system allows the company to:
 
-## ⚙️ Initial Configuration
+* Register vehicles in inventory
+* Manage vehicle sales
+* Import large datasets from CSV files
+* Track vehicle operation history
+* Maintain relational integrity using SQL
+* Store operational history using NoSQL
 
-### 1. Create MySQL Tables
-Open your terminal and execute:
+The architecture implements a **hybrid database model** combining:
 
-```bash
-mysql -u root -p < script.sql
-2. Environment Variables
-Create a .env file in the project's root folder:
+* **MySQL** for structured relational data
+* **MongoDB Atlas** for event history and traceability
+* **Node.js + Express** for the REST API
 
-Fragmento de código
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=yourPassword
-DB_NAME=automarket
-PORT=3000
-3. Install Dependencies
-Run the following command:
+This approach demonstrates:
 
-Bash
-npm install
-🚀 How to Run
-Execute the following command in your terminal:
+* Database normalization up to **Third Normal Form (3NF)**
+* Referential integrity
+* Strategic separation of SQL and NoSQL responsibilities
+* CSV data ingestion
+* Hybrid persistence architecture
 
-Bash
-nodemon index.js
-Then, open your browser at:
-http://localhost:3000
+---
 
-🛠️ Features
-Inventory — View all registered vehicles, including seller info, prices, and automatically calculated profit.
+# 2. Technology Stack
 
-Add — Register a new vehicle with license plate, brand, color, status, and mileage.
+Backend technologies used:
 
-Import CSV — Upload up to 80 vehicles at once by dragging and dropping a .csv file.
+* **Node.js v20 (ES Modules)**
+* **Express**
+* **MySQL**
+* **MongoDB Atlas**
+* **Mongoose**
 
-History — Consult every action performed: what was created, edited, deleted, or imported, and when.
+Dependencies:
 
-📂 Project Structure
-Plaintext
-car buy and sell/
-├── index.js          ← Starts the server
-├── .env              ← Credentials (do not upload to GitHub)
-├── script.sql        ← Creates MySQL tables
-├── config/           ← MySQL and MongoDB connections
-├── routes/           ← API routes
-├── controllers/      ← Logic for each operation
-├── middlewares/      ← CSV file uploading
-├── models/           ← History structure
-└── public/           ← Web interface (HTML, CSS, JS)
+* express
+* mysql2
+* mongoose
+* multer
+* csv-parser
+* dotenv
+
+---
+
+# 3. Project Structure
+
+automarket/
+
+config/
+mysql.js
+mongo.js
+
+controllers/
+history.controller
+vehicule.controller
+
+models/
+log
+
+route/
+history.routes
+vehicule.routes
+
+public/
+app.js
+index.html
+styles.css
+
+public/
+css/
+styles.css
+js/
+app.js
+
+middlewares/
+vehiculos.csv
+Diagrama 
+uploads
+
+
+index.js
+README.md
