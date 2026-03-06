@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoMarket</title>
+  <link rel="stylesheet" href="../public/styles.css">
+</head>
+<body>
+
+<header>
+  <div class="logo">Auto<span>Market</span></div>
+  <nav>
+    <button class="active" onclick="go('inventory')">Inventario</button>
+    <button onclick="go('add')"> Agregar</button>
+    <button onclick="go('import')">Importar CSV</button>
+  </nav>
+</header>
+
+<div class="container">
+
+  <div id="view-inventory" class="view active">
+
+    <div class="page-header">
+      <h1>Inventario</h1>
+      <button class="btn btn-ghost" onclick="loadVehicles()">↻ Actualizar</button>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-label">Total</div>
+        <div class="stat-value" id="sTotal">—</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Vendidos</div>
+        <div class="stat-value" id="sSold">—</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Disponibles</div>
+        <div class="stat-value" id="sAvail">—</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Ganancia total</div>
+        <div class="stat-value" id="sProfit">—</div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <input
+        class="search"
+        type="text"
+        placeholder="Buscar por placa, marca o color..."
+        oninput="filterTable(this.value)"
+      >
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Placa</th>
+            <th>Marca</th>
+            <th>Color</th>
+            <th>Estado</th>
+            <th>KM</th>
+            <th>Vendedor</th>
+            <th>P. Compra</th>
+            <th>P. Venta</th>
+            <th>Ganancia</th>
+            <th>Operación</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="tbody">
+          <tr><td colspan="11" class="empty">Cargando...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <div id="view-add" class="view">
+
+    <div class="page-header">
+      <h1>Agregar Vehículo</h1>
+    </div>
+
+    <div class="form-card">
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label for="f_plate">Placa *</label>
+          <input
+            id="f_plate"
+            type="text"
+            placeholder="ABC123"
+            oninput="this.value = this.value.toUpperCase()"
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="f_brand">Marca *</label>
+          <input id="f_brand" type="text" placeholder="Toyota">
+        </div>
+
+        <div class="form-group">
+          <label for="f_color">Color</label>
+          <input id="f_color" type="text" placeholder="Blanco">
+        </div>
+
+        <div class="form-group">
+          <label for="f_status">Estado</label>
+          <select id="f_status">
+            <option value="New">Nuevo</option>
+            <option value="Used">Usado</option>
+          </select>
+        </div>
+
+        <div class="form-group full">
+          <label for="f_mileage">Kilometraje</label>
+          <input id="f_mileage" type="number" placeholder="0" min="0">
+        </div>
+
+      </div>
+
+      <div class="form-actions">
+        <button class="btn btn-ghost" onclick="go('inventory')">Cancelar</button>
+        <button class="btn btn-primary" onclick="createVehicle()">Guardar</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="view-import" class="view">
+
+    <div class="page-header">
+      <h1>Importar CSV</h1>
+    </div>
+
+    <div
+      id="drop-zone"
+      class="drop-zone"
+      onclick="document.getElementById('file-input').click()"
+      ondragover="event.preventDefault(); this.classList.add('drag')"
+      ondragleave="this.classList.remove('drag')"
+      ondrop="handleDrop(event)">
+      <h3>Arrastra tu archivo CSV aquí</h3>
+      <p>o haz clic para seleccionar</p>
+    </div>
+
+    <input
+      id="file-input"
+      type="file"
+      accept=".csv"
+      style="display:none"
+      onchange="uploadCSV(this.files[0])"
+    >
+
+    <div id="upload-result" class="upload-result"></div>
+
+  </div>
+
+  <div id="view-history" class="view">
+
+    <div class="page-header">
+      <h1>Historial</h1>
+      <button class="btn btn-ghost" onclick="loadHistory()">↻ Actualizar</button>
+    </div>
+
+    <div id="log-list" class="log-list">
+      <p style="color:#aaa; font-size:13px">Cargando...</p>
+    </div>
+
+  </div>
+
+</div>
+
+<div id="modal-edit" class="overlay">
+  <div class="modal">
+    <h2>Editar Vehículo</h2>
+
+    <input type="hidden" id="e_id">
+
+    <div class="form-grid">
+
+      <div class="form-group">
+        <label for="e_brand">Marca</label>
+        <input id="e_brand" type="text">
+      </div>
+
+      <div class="form-group">
+        <label for="e_color">Color</label>
+        <input id="e_color" type="text">
+      </div>
+
+      <div class="form-group">
+        <label for="e_status">Estado</label>
+        <select id="e_status">
+          <option value="New">Nuevo</option>
+          <option value="Used">Usado</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="e_mileage">Kilometraje</label>
+        <input id="e_mileage" type="number" min="0">
+      </div>
+
+    </div>
+
+    <div class="form-actions">
+      <button class="btn btn-ghost" onclick="closeEdit()">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveEdit()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script src="../public/app.js"></script>
+
+</body>
+</html>
